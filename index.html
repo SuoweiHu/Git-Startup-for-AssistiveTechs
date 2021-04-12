@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>Git - Basic Knowledge</title>
+	</head>
+<body>
+<h1>Git - Basic Knowledge</h1>
+
+<h2>Some terminologies </h2>
+
+<h3>Working Tree </h3>
+
+<h3>Index/Stage </h3>
+
+<h3>Local/Remote Repository</h3>
+
+<pre><code class="code-highlighted code-bash">If you are not familiar with all these terminologies, please look it up by yourself. </code></pre>
+
+<hr />
+
+<h2>Starting out</h2>
+
+<h3>init</h3>
+
+<p>Create an empty Git repository or reinitialise an existing one</p>
+
+<p>将创建一个名为 .git 的子目录,这个子目录含有你初始化的 Git 仓库中所有的必须文件,这些文件是 Git 仓库的骨干</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git init</code></pre>
+
+<h3>remote</h3>
+
+<p>Adding a remote repository that you can push to </p>
+
+<p>添加可以上传的远端，这里的远端使用别名origin</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git remote add origin git@github.com:loaheb/test-git.git
+<span class="syntax-all syntax-keyword">&gt;</span> git remote -v
+origin git@github.com:loaheb/test-git.git (fetch)
+origin git@github.com:loaheb/test-git.git (push)</code></pre>
+
+<hr />
+
+<h2>Local operation</h2>
+
+<h3>add</h3>
+
+<p>Adding files to the stage (or index)</p>
+
+<p>添加文件到暂存区</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git add <span class="syntax-all syntax-constant">.</span>     <span class="syntax-all syntax-comment"># Add all files in working dir to stage
+</span><span class="syntax-all syntax-keyword">&gt;</span> git add filename.txt <span class="syntax-all syntax-comment"># Add file filename.txt to stage
+</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-4.png"/></p>
+
+<h3>commit </h3>
+
+<p>Adding a new commit that is attacking to the commit item where the HEAD is pointing to (at the local repo)</p>
+
+<p>在本地仓库中，HEAD指针指向的commit快照后添加一个新的快照</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git commit -m <span class="syntax-all syntax-string">&quot;Example Message&quot;</span>
+<span class="syntax-all syntax-keyword">&gt;</span> git commit 
+  Example Message
+  <span class="syntax-all syntax-comment"># Please input commit message......
+</span>  <span class="syntax-all syntax-comment"># XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+</span>  <span class="syntax-all syntax-comment"># XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+</span>  :wq</code></pre>
+
+<p>Illustration: <img src="DraggedImage-5.png"/></p>
+
+<h3>reset </h3>
+
+<p>Reset to an earlier state of commit, by discarding all the commit item done after it (if you don&#39;t with to keep code use <code>--hard</code> option, otherwise use <code>--soft</code>)</p>
+
+<p>撤销到指定的版本，删除该版本之后的所有commit (git reset是直接删除指定的commit, 是把HEAD向后移动了一下)</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git reset --hard HEAD^ <span class="syntax-all syntax-comment"># 回到最新的一次提交
+</span><span class="syntax-all syntax-keyword">&gt;</span> git reset --soft HEAD^ <span class="syntax-all syntax-comment"># 此时代码保留，回到 git add 之前
+</span><span class="syntax-all syntax-keyword">&gt;</span> git reset HEAD^        <span class="syntax-all syntax-comment"># == &quot;git reset --soft HEAD^&quot;
+</span><span class="syntax-all syntax-keyword">&gt;</span> git reset --hard <span class="syntax-all syntax-keyword">&lt;</span>commit_id<span class="syntax-all syntax-keyword">&gt;</span> <span class="syntax-all syntax-comment">#Reset to ceertain commit 
+</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-6.png"/><img src="DraggedImage-7.png"/></p>
+
+<h3>revert</h3>
+
+<p>Revert to an earlier state of commit, by keeping all the commit item done after it, but to add another commit that has the same content of the commit you are reverting to.</p>
+
+<p>撤销指定的版本, 保留该版本之后的所有commit，撤销会作为一次新的commit进行保存 (git revert是用一次新的commit来回滚之前的commit, 是HEAD继续前进，只是新的commit的内容和要revert的内容正好相反，能够抵消要被revert的内容)</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git revert 
+<span class="syntax-all syntax-keyword">&gt;</span> git revert HEAD  <span class="syntax-all syntax-comment"># 撤销前一次 commit
+</span><span class="syntax-all syntax-keyword">&gt;</span> git revert HEAD^ <span class="syntax-all syntax-comment"># 撤销前前一次 commit 
+</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-8.png"/></p>
+
+<hr />
+
+<h2>Remote operation</h2>
+
+<h3>push </h3>
+
+<p>Used to transfer or push the commit, which is made on a local branch in your computer to a remote repository like GitHub.(By default the git will push the <code>local master branch</code> to the remote <code>master branch</code> )</p>
+
+<p>用于从将本地的分支版本上传到远程并合并</p>
+
+<p>(默认如果不指定要push哪个branch到哪个remote远端Git服务器。Git会默认push本地的master branch到别名为origin的远端。)</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git push
+<span class="syntax-all syntax-keyword">&gt;</span> git push origin master
+<span class="syntax-all syntax-keyword">&gt;</span> git push origin master:master
+<span class="syntax-all syntax-keyword">&gt;</span> git push <span class="syntax-all syntax-string">&#39;remote_alias&#39;</span> <span class="syntax-all syntax-string">&#39;local_branch_name&#39;</span> <span class="syntax-all syntax-comment">#若分支名字相同
+</span><span class="syntax-all syntax-keyword">&gt;</span> git push <span class="syntax-all syntax-string">&#39;remote_alias&#39;</span> <span class="syntax-all syntax-string">&#39;local_branch_name&#39;</span>:<span class="syntax-all syntax-string">&#39;remote_branch_n&#39;</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-9.png"/><img src="DraggedImage-10.png"/></p>
+
+<h3>fetch</h3>
+
+<p>Get the update from the remote repo to local repo without doing any changes (merge / rebase) to the branches. </p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git fetch 
+  remote: Counting objects: 3, done.
+  remote: Compressing objects: 100% (3/3), done.
+  remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+  Unpacking objects: 100% (3/3), done.
+  From https://github.com/jaredRenCode/gitignoreTest
+  8f37824.5d77c90 master -<span class="syntax-all syntax-keyword">&gt;</span> origin/master
+
+<span class="syntax-all syntax-keyword">&gt;</span> git fetch --all <span class="syntax-all syntax-comment"># fetch all registered remote 
+</span><span class="syntax-all syntax-keyword">&gt;</span> git fetch <span class="syntax-all syntax-string">&#39;remote_alias&#39;</span> <span class="syntax-all syntax-comment"># # fetch all branch from a remote
+</span><span class="syntax-all syntax-keyword">&gt;</span> git fetch <span class="syntax-all syntax-string">&#39;remote_alias&#39;</span> <span class="syntax-all syntax-string">&#39;branch_name&#39;</span> <span class="syntax-all syntax-comment"># specific branch &amp; remote
+</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-11.png"/></p>
+
+<h3>pull</h3>
+
+<p>Run two command at once: fetch then merge (not safe)</p>
+
+<p>Git Fetch的基础上做合并分支操作</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git push  <span class="syntax-all syntax-comment"># git fetch + git 
+</span>  Updating 8f37824..5d77c90
+  Fast-forward
+  README. md I 7 +++++++
+  1 file changed, 7 insertions(+)
+  create mode 100644 README.md
+
+<span class="syntax-all syntax-keyword">&gt;</span> git push --rebase <span class="syntax-all syntax-comment">#use rebase instead of merge
+</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-12.png"/></p>
+
+<h3>remote branch operations</h3>
+
+<p>delete branch on remote machine</p>
+
+<p>删除主机的分支，以下命令表示删除 origin 主机的 master 分支</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git push origin --delete master</code></pre>
+
+<p>show branch on remote machine </p>
+
+<p>查看所有的远程分支</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git branch -r
+<span class="syntax-all syntax-comment"># origin/master
+</span><span class="syntax-all syntax-comment"># origin/featurel
+</span><span class="syntax-all syntax-comment"># origin/debug2
+</span><span class="syntax-all syntax-comment"># remote-repo/master
+</span><span class="syntax-all syntax-comment"># remote-repo/other-feature
+</span></code></pre>
+
+<hr />
+
+<h2>Multiple branch</h2>
+
+<h3>Branch (Basic)</h3>
+
+<p>Add new branch &amp; move to branch (Note: when you change branch, git will replace the content with last commit in this branch)</p>
+
+<p>当你切换分支的时候，Git 会用该分支的最后提交的快照替换你的工作目录的内容</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git branch <span class="syntax-all syntax-string">&#39;branch_name&#39;</span>      <span class="syntax-all syntax-comment"># create branch
+</span><span class="syntax-all syntax-keyword">&gt;</span> git checkout <span class="syntax-all syntax-string">&#39;branch_name&#39;</span>    <span class="syntax-all syntax-comment"># checkout branch
+</span>Switched to branch <span class="syntax-all syntax-string">&#39;branch_name&#39;</span>.
+<span class="syntax-all syntax-keyword">&gt;</span> git checkout -b <span class="syntax-all syntax-string">&#39;branch_name&#39;</span> <span class="syntax-all syntax-comment"># 创建新分支并立即切换到该分支下 
+</span>Switched to branch <span class="syntax-all syntax-string">&#39;branch_name&#39;</span>.</code></pre>
+
+<p>Show all branch</p>
+
+<p>列出分支（列出本地分支）</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git branch
+  master
+<span class="syntax-all syntax-keyword">*</span> feature
+  developing
+  testing
+<span class="syntax-all syntax-keyword">&gt;</span> ls ./.git/refs/heads/</code></pre>
+
+<p>Delete branch (Note: need merge before deleting)</p>
+
+<p>删除分支</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git branch -d <span class="syntax-all syntax-string">&#39;branchname&#39;</span>
+<span class="syntax-all syntax-keyword">&gt;</span> git branch -delete <span class="syntax-all syntax-string">&#39;branchname&#39;</span>
+Deleted branch <span class="syntax-all syntax-string">&#39;branchname&#39;</span> (was fd98ba2).
+<span class="syntax-all syntax-keyword">&gt;</span> git branch --force -d <span class="syntax-all syntax-string">&#39;branchname&#39;</span> <span class="syntax-all syntax-comment">#Force delete (or -D)
+</span>Deleted branch <span class="syntax-all syntax-string">&#39;branchname&#39;</span> (was fd98ba2).</code></pre>
+
+<p>Rename branch</p>
+
+<p>重命名分支</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git branch -m <span class="syntax-all syntax-string">&#39;OLD-BRANCH-&#39;</span> <span class="syntax-all syntax-string">&#39;NEW-BRANCH-NAME&#39;</span>
+<span class="syntax-all syntax-keyword">&gt;</span> git branch -move <span class="syntax-all syntax-string">&#39;OLD-BRANCH-NAME&#39;</span> <span class="syntax-all syntax-string">&#39;NEW-BRANCH-NAME&#39;</span></code></pre>
+
+<h3>Diff (Compare)</h3>
+
+<p>used to compare the difference between two branches&#39; last commitment</p>
+
+<p>用于对比两个branch最后一次快照的区别</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git diff <span class="syntax-all syntax-string">&#39;FIRST-BRANCH&#39;</span>..<span class="syntax-all syntax-string">&#39;SECOND-BRANCH&#39;</span>
+  diff --git a/master.txt b/master.txt
+  index 27efcb2..438c892 100644
+  --- a/master.txt
+  +++ b/master.txt
+  @@ -1,5 +1,6 @@
+   1
+   2
+   3
+  +
+   conflict-2
+  -conflict-4
+  +conflict-4
+  <span class="syntax-all syntax-constant">\ </span>No newline at end of file
+  (END)</code></pre>
+
+<hr />
+
+<h2>Combining Branches</h2>
+
+<h3>Merge </h3>
+
+<p>Combine one branch to another, by resolving all the commit conflicts at once (all the commits within the merging branch will be considered as one merge conflict that needs to be resolved)</p>
+
+<p>将两个分支合并到其中一个分支，保留并不更改两个分支的所有记录，其中只会出现一次合并冲突</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git checkout master
+<span class="syntax-all syntax-keyword">&gt;</span> git merge features
+  Auto-merging runoob.php
+  CONFLICT (content): Merge conflict <span class="syntax-all syntax-keyword">in</span> runoob.php
+  Automatic merge failed<span class="syntax-all syntax-keyword">;</span> fix conflicts and <span class="syntax-all syntax-keyword">then</span> commit result.
+<span class="syntax-all syntax-keyword">&gt;</span>  cat runoob.php     <span class="syntax-all syntax-comment"># Resolve the conflict manually here
+</span>  <span class="syntax-all syntax-keyword">&lt;?</span>php
+  <span class="syntax-all syntax-keyword">&lt;&lt;&lt;</span><span class="syntax-all syntax-string">&lt;&lt;&lt;&lt;</span> HEAD
+  <span class="syntax-all syntax-constant">echo</span> 1<span class="syntax-all syntax-keyword">;</span>
+  =======
+  <span class="syntax-all syntax-constant">echo</span> <span class="syntax-all syntax-string">&#39;runoob&#39;</span><span class="syntax-all syntax-keyword">;</span>
+  <span class="syntax-all syntax-keyword">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> change_site
+  <span class="syntax-all syntax-keyword">?&gt;</span>   
+<span class="syntax-all syntax-keyword">&gt;</span> git add <span class="syntax-all syntax-constant">.</span>
+<span class="syntax-all syntax-keyword">&gt;</span> git commit -m <span class="syntax-all syntax-string">&quot;conflict resolved, branches merged at master&quot;</span></code></pre>
+
+<p>Illustration: <img src="DraggedImage-13.png"/></p>
+
+<h3>Rebase </h3>
+
+<p>Rebase all the commits from one branch on top of all the commits on another branch (commits after branching happens).</p>
+
+<p>将其中一个分支以另一个分支的最后一次快找作为基础添加，其中“被”变基的分支需要更改他的每次提交历史，“以”基础变基的分支保留其所有历史不作更改。其中需要解决合并冲突的次数与“被”变基的分支的快找提交次数相同。</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git log --graph --oneline --all
+<span class="syntax-all syntax-keyword">*</span> 99d8135 (HEAD -<span class="syntax-all syntax-keyword">&gt;</span> feature) 5-conflict
+<span class="syntax-all syntax-keyword">*</span> ac5f779 3-conflict
+<span class="syntax-all syntax-keyword">|</span> <span class="syntax-all syntax-keyword">*</span> 1a28ace (master) 4-master
+<span class="syntax-all syntax-keyword">|</span> <span class="syntax-all syntax-keyword">*</span> c8f9b4e 2-master
+<span class="syntax-all syntax-keyword">|</span>/  
+<span class="syntax-all syntax-keyword">*</span> 04342cd 1-master
+(END)
+
+<span class="syntax-all syntax-comment"># Use master as base
+</span><span class="syntax-all syntax-keyword">&gt;</span> git checkout feature 
+<span class="syntax-all syntax-keyword">&gt;</span> git rebase --interactive master <span class="syntax-all syntax-comment"># same as &#39;git rebase -i&#39;
+</span>  First, rewinding head to replay your work on top of it...
+  Applying: 3-conflict
+  Using index info to reconstruct a base tree...
+  M	master.txt
+
+<span class="syntax-all syntax-comment"># ====================================
+</span><span class="syntax-all syntax-comment"># recursive resolve conflicts ....
+</span><span class="syntax-all syntax-keyword">&gt;</span> git add/rm <span class="syntax-all syntax-keyword">&lt;</span>conflicted_files<span class="syntax-all syntax-keyword">&gt;</span>
+<span class="syntax-all syntax-keyword">&gt;</span> git rebase --continue
+  Applying: 1-conflict
+  Applying: 2-conflict
+  ...
+  Applying: n-conflict
+
+<span class="syntax-all syntax-comment"># conflicts resolved ...
+</span><span class="syntax-all syntax-keyword">&gt;</span> git rebase --continue
+  Successfully rebased and updated refs/heads/feature.
+<span class="syntax-all syntax-comment"># ====================================
+</span>
+<span class="syntax-all syntax-comment"># use feature as base (so all commit goes into master branch)
+</span><span class="syntax-all syntax-keyword">&gt;</span> git checkout master 
+<span class="syntax-all syntax-keyword">&gt;</span> git rebase --interactive feature
+  Successfully rebased and updated refs/heads/master.
+
+<span class="syntax-all syntax-keyword">&gt;</span> git log --graph --oneline --all
+<span class="syntax-all syntax-keyword">*</span> f082efd (HEAD -<span class="syntax-all syntax-keyword">&gt;</span> master, feature) 5-conflict
+<span class="syntax-all syntax-keyword">*</span> 81c586d 3-conflict
+<span class="syntax-all syntax-keyword">*</span> 1a28ace 4-master
+<span class="syntax-all syntax-keyword">*</span> c8f9b4e 2-master
+<span class="syntax-all syntax-keyword">*</span> 04342cd 1-master
+(END)</code></pre>
+
+<p>Illustration: <img src="DraggedImage-14.png"/></p>
+
+<p>Reference: </p>
+
+<ul>
+	<li><a href="https://www.youtube.com/watch?v=f1wnYdLEpgI">Video</a></li>
+	<li><a href="https://git-scm.com/docs/git-rebase">Official</a> </li>
+	<li><a href="https://blog.theodo.com/2018/09/keep-git-history-clean-using-rebase/" title="Keep your git history clean using rebase">Journal</a></li>
+</ul>
+
+<h4>Squash</h4>
+
+<p>(a feature of rebase)</p>
+
+<p>While rebasing you could use <code>-i</code> to enter interactive rebase mode, that&#39;s where you can combine some of the commits by &quot;squashing&quot; them into a single commit. This will allow for better cohesion in terms of &quot;one feature is one commit&quot;, rather than &quot;i want to make a commit is a commit&quot;. (Squash to previous commit)</p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-keyword">&gt;</span> git log 
+<span class="syntax-all syntax-keyword">*</span> 205a708 (HEAD -<span class="syntax-all syntax-keyword">&gt;</span> master, feature) feature-1
+<span class="syntax-all syntax-keyword">*</span> 6cad86e conflict-at-3
+<span class="syntax-all syntax-keyword">*</span> 4411115 conflict-at-2
+<span class="syntax-all syntax-keyword">*</span> b9a6584 master-4
+<span class="syntax-all syntax-keyword">*</span> 4ba9bf7 master-3
+<span class="syntax-all syntax-keyword">*</span> 18c8742 master-2
+<span class="syntax-all syntax-keyword">*</span> e34a9ef master-1
+(END)
+
+
+<span class="syntax-all syntax-comment"># squash previous 3 commit on master branch into a single commit
+</span><span class="syntax-all syntax-keyword">&gt;</span> git checkout master 
+<span class="syntax-all syntax-keyword">&gt;</span> git rebase -i HEAD~3
+  1 pick 4411115 conflict-at-2
+  2 sqush 6cad86e conflict-at-3
+  3 sqush 205a708 feature-1
+
+<span class="syntax-all syntax-keyword">&gt;</span> (:wq enter)
+  1 <span class="syntax-all syntax-comment"># This is a combination of 3 commits.
+</span>  2 <span class="syntax-all syntax-comment"># This is the 1st commit message:
+</span>  4 <span class="syntax-all syntax-comment"># conflict-at-2
+</span>  6 <span class="syntax-all syntax-comment"># This is the commit message #2:
+</span>  8 <span class="syntax-all syntax-comment"># conflict-at-3
+</span> 10 <span class="syntax-all syntax-comment"># This is the commit message #3:
+</span> 12 feature-1 <span class="syntax-all syntax-keyword">done</span>
+
+<span class="syntax-all syntax-keyword">&gt;</span> git log 
+<span class="syntax-all syntax-keyword">*</span> 7beb3fb (HEAD -<span class="syntax-all syntax-keyword">&gt;</span> master) feature-1 <span class="syntax-all syntax-keyword">done</span>
+<span class="syntax-all syntax-keyword">|</span> <span class="syntax-all syntax-keyword">*</span> 205a708 (feature) feature-1
+<span class="syntax-all syntax-keyword">|</span> <span class="syntax-all syntax-keyword">*</span> 6cad86e conflict-at-3
+<span class="syntax-all syntax-keyword">|</span> <span class="syntax-all syntax-keyword">*</span> 4411115 conflict-at-2
+<span class="syntax-all syntax-keyword">|</span>/  
+<span class="syntax-all syntax-keyword">*</span> b9a6584 master-4
+<span class="syntax-all syntax-keyword">*</span> 4ba9bf7 master-3
+<span class="syntax-all syntax-keyword">*</span> 18c8742 master-2
+<span class="syntax-all syntax-keyword">*</span> e34a9ef master-1
+  </code></pre>
+
+<p>Illustration: <img src="DraggedImage-15.png"/></p>
+
+<p>Reference: </p>
+
+<ul>
+	<li><a href="https://www.youtube.com/watch?v=V5KrD7CmO4o">Video</a></li>
+</ul>
+
+</body>
+</html>
+
